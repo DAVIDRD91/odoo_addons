@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pb_add_medidas_sale_order" model="ir.ui.view">
+        <field name="name">pb_add_medidas_sale_order</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='note_group']" position="before">
+                <group name="info_medidas" string="Medidas" col='5'>
+                    <div >
+                        <label for="x_medGola" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medGola" nolabel="1" class="oe_inline" style="width: 100px !important;" />
+                    </div>
+                    <div >
+                        <label for="x_medQuadril" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medQuadril" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div >
+                        <label for="x_medCosta" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medCosta" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medCalca" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medCalca" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    
+                    <div>
+                        <label for="x_medGanco" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medGanco" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medOmbro" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medOmbro" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medComprimento" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medComprimento" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medManga" class="oe_inline" style="width: 70px !important;" />
+                        <field name="x_medManga" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medCintura" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medCintura" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medComp2" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medComp2" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medFrente" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medFrente" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medSs" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medSs" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medLagManga" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medLagManga" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medQuad" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medQuad" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medBusto" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medBusto" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medAlturaSeio" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medAlturaSeio" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medPunho" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medPunho" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medCoxa" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medCoxa" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medCint2" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medCint2" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medAlturaCintura" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medAlturaCintura" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                    <div>
+                        <label for="x_medPo" class="oe_inline" style="width: 70px !important;"/>
+                        <field name="x_medPo" nolabel="1" class="oe_inline" style="width: 100px !important;"/>
+                    </div>
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='note_group']" position="replace">
+                <group name="note_group" string="Observações" col="6" class="mt-2 mt-md-0">
+                    <group colspan="4">
+                        <field name="note" class="oe-bordered-editor" nolabel="1" placeholder="Observações..."/>
+                    </group>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                        <field name="tax_totals_json" widget="account-tax-totals-field" nolabel="1" colspan="2"/>
+                    </group>
+                    <div class="oe_clear"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

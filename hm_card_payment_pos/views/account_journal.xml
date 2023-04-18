@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hm_transaction_fee_form" model="ir.ui.view">
+        <field name="name">view.hm.transaction.fee.journal.form</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form" />
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="hm_has_transaction_fee"/>
+                <field name="hm_transaction_fee"/>
+                <field name="hm_fee_account_id"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="SaleOrderButton" owl="1">
+        <div class="control-button">
+            <i class="fa fa-pencil-square-o" />
+            Criar Pedido de Venda
+        </div>
+    </t>
+    <t t-name="ViewSaleOrderButton" owl="1" t-attf-class="oe_hidden">
+        <div class="control-button">
+            <i class="fa fa-eye" />
+            Visualizar Pedidos
+        </div>
+    </t>
+</templates>

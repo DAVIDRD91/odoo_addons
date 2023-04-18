@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="whatsapp_sales_template" model="mail.template">
+        <field name="name">Whats App Sale template</field>
+        <field name="subject">Sales template</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="body_html"><![CDATA[<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+         <div>
+            Olá *<t t-out="object.partner_id.name or ''"></t>*,
+         </div>
+         <t t-if="object.state in ('draft', 'sent')">
+            Sua Cotação *<t t-out="object.name or ''"></t>* com valor de *<t t-out="format_amount(object.amount_total, object.currency_id)"></t>* está pronta.
+            <div>
+                A data e hora da sua cotação são "<t t-out="object.date_order"></t>"
+            </div>
+            <div>
+                Os detalhes da cotação são os seguintes: <br>
+                <t t-foreach="object" t-as="each">
+                    <t t-foreach="each.order_line" t-as="id">
+                        *Produto: <t t-out="id.product_id.name"></t>* <br>
+                         *Qtd: <t t-out="id.product_uom_qty"></t>*<br>
+                         *Preço:<t t-out="id.price_subtotal"></t>*<br>
+                    </t>
+                </t>
+            </div>
+            <div>
+                Em caso de dúvida entre em contato conosco.
+            </div>
+         </t>
+         <t t-else="">
+            <div>
+                Seu pedido de venda *<t t-out="object.name or ''"></t>* com valor de *<t t-out="format_amount(object.amount_total, object.currency_id)"></t>* está confirmado.
+            </div>
+            <div>
+                A data e hora do seu pedido são "<t t-out="object.date_order"></t>"
+            </div>
+            <div>
+                Os detalhes do seu pedido são os seguintes: <br>
+                <t t-foreach="object" t-as="each">
+                    <t t-foreach="each.order_line" t-as="id">
+                        *Produto: <t t-out="id.product_id.name"></t>* <br>
+                         *Qtd: <t t-out="id.product_uom_qty"></t>*<br>
+                         *Preço:<t t-out="id.price_subtotal"></t>*<br>
+                    </t>
+                </t>
+            </div>
+            <div>
+                Em caso de dúvida entre em contato conosco.
+            </div>
+         </t>
+        ]]>
+        </field>
+    </record>
+    <record id="whatsapp_inventory_template" model="mail.template">
+        <field name="name">Whats app Inventory template</field>
+        <field name="subject">Inventory Template</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="body_html"><![CDATA[<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+         <p style="margin: 0px; padding: 0px; font-size: 13px;">
+         <div>
+            Olá *<t t-out="object.partner_id.name or ''"></t>*,
+         </div>
+         <div>
+             <t t-if="object.state in ('draft')">
+                Recebemos seu pedido *<t t-out="object.name"></t>*.
+                <div>
+                    Os detalhes do pedido são os seguintes: <br>
+                    <t t-foreach="object" t-as="each">
+                        <t t-foreach="each.move_ids_without_package" t-as="id">
+                            *Produto: <t t-out="id.product_id.name"></t>* <br>
+                             *Qtd: <t t-out="id.product_uom_qty"></t>*<br>
+                        </t>
+                    </t>
+                </div>
+             </t>
+             <t t-if="object.state in ('assigned')">
+                Seu pedido *<t t-out="object.name"></t>* está pronto.
+                <div>
+                    Os detalhes do pedido são os seguintes: <br>
+                    <t t-foreach="object" t-as="each">
+                        <t t-foreach="each.move_ids_without_package" t-as="id">
+                            *Produto: <t t-out="id.product_id.name"></t>* <br>
+                             *Qtd: <t t-out="id.product_uom_qty"></t>*<br>
+                        </t>
+                    </t>
+                    O Prazo máximo para retirada e de 60 dias <br>
+                </div>
+             </t>
+             <t t-if="object.state in ('confirmed')">
+                Seu pedido *<t t-out="object.name"></t>* está Pronto.
+                <div>
+                    Os detalhes do pedido são os seguintes: <br>
+                    <t t-foreach="object" t-as="each">
+                        <t t-foreach="each.move_ids_without_package" t-as="id">
+                            *Produto: <t t-out="id.product_id.name"></t>* <br>
+                             *Qtd: <t t-out="id.product_uom_qty"></t>*<br>
+                        </t>
+                    </t>
+                </div>
+             </t>
+             <t t-if="object.state in ('done')">
+                Seu pedido *<t t-out="object.name"></t>* foi Enviado
+                <div>
+                    Os detalhes do pedido são os seguintes: <br>
+                    <t t-foreach="object" t-as="each">
+                        <t t-foreach="each.move_ids_without_package" t-as="id">
+                            *Produto: <t t-out="id.product_id.name"></t>* <br>
+                             *Qtd: <t t-out="id.quantity_done"></t>*<br>
+                        </t>
+                    </t>
+                </div>
+             </t>
+         </div>
+         <div>
+            Em caso de dúvida entre em contato conosco.
+         </div>
+            </p>
+        ]]>
+        </field>
+    </record>
+    <record id="whatsapp_invoice_template" model="mail.template">
+        <field name="name">Whats app Invoice template</field>
+        <field name="subject">Invoice Template</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="body_html">
+            <![CDATA[<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+        <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                <div>
+                    Olá *<t t-out="object.partner_id.name or ''"></t>*
+                </div>
+                <div>
+                    Aqui está sua fatura *<t t-out="object.name"></t>* com valor de *<t t-out="format_amount(object.amount_total, object.currency_id)"></t>*
+                    emitido por <t t-out="object.company_id.l10n_br_legal_name"></t>.
+                </div>
+                <div>
+                    <t t-if="object.payment_state in ('paid')">
+                        Esta fatura já foi paga. O valor devido é *<t t-out="format_amount(object.amount_residual, object.currency_id)"></t>*
+                    </t>
+                    <t t-else="">
+                        Por favor, envie o pagamento quando possível. O valor devido é *<t t-out="format_amount(object.amount_residual, object.currency_id)"></t>*
+                    </t>
+                </div>
+                A data da fatura é <t t-out="object.invoice_date"></t>
+                <div>
+                    Seu pedido:
+                    <br>
+                    <t t-foreach="object" t-as="each">
+                        <t t-foreach="each.invoice_line_ids" t-as="id">
+                            *Produto: <t t-out="id.product_id.name"></t>* <br>
+                             *Qtd: <t t-out="id.quantity"></t>*<br>
+                             *Price:<t t-out="id.price_unit"></t>*<br>
+                        </t>
+                    </t>
+                </div>
+                Em caso de dúvida entre em contato conosco.
+        ]]>
+        </field>
+    </record>
+    <record id="whatsapp_purchase_template" model="mail.template">
+        <field name="name">Whats app Purchase template</field>
+        <field name="subject">Purchase Template</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="body_html"><![CDATA[<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+             <p style="margin: 0px; padding: 0px; font-size: 13px;">
+             <div>
+                Olá *<t t-out="object.partner_id.name or ''"></t>*,
+             </div>
+             <t t-if="object.state in ('draft', 'sent')">
+                Essa msg trata-se de solicitação de cotação (RFQ) *<t t-out="object.name"></t>* com valor de *<t t-out="format_amount(object.amount_total, object.currency_id)"></t>*
+                <div>
+                    Estamos aguardando o recebimento dos produtos em <t t-out="object.date_planned"></t>
+                </div>
+                <div>
+                    Os detalhes da cotação são os seguintes: <br>
+                    <t t-foreach="object" t-as="each">
+                        <t t-foreach="each.order_line" t-as="id">
+                            *Produto: <t t-out="id.product_id.name"></t>* <br>
+                             *Qtd: <t t-out="id.product_qty"></t>*<br>
+                             *Price:<t t-out="id.price_subtotal"></t>*<br>
+                        </t>
+                    </t>
+                </div>
+             </t>
+             <t t-else="">
+                <div>
+                    Seu número de ordem de compra *<t t-out="object.name"></t>* com valor de *<t t-out="format_amount(object.amount_total, object.currency_id)"></t>* está Confirmado.
+                </div>
+                <div>
+                   A data e hora de confirmação do pedido são <t t-out="object.date_approve"></t>
+                </div>
+                <div>
+                    Os detalhes do pedido são os seguintes: <br>
+                    <t t-foreach="object" t-as="each">
+                        <t t-foreach="each.order_line" t-as="id">
+                            *Produto: <t t-out="id.product_id.name"></t>* <br>
+                             *Qtd: <t t-out="id.product_qty"></t>*<br>
+                             *Price:<t t-out="id.price_subtotal"></t>*<br>
+                        </t>
+                    </t>
+                </div>
+             </t>
+            <div>
+               Estamos esperando o recebimento de produtos na data programada ou antes <br/>
+                Em caso de dúvida entre em contato conosco.
+            </div>
+        ]]>
+        </field>
+    </record>
+    <record id="whatsapp_contacts_template" model="mail.template">
+        <field name="name">Whats app Contact template</field>
+        <field name="subject">Contact Message Template</field>
+        <field name="model_id" ref="model_res_partner"/>
+        <field name="body_html"></field>
+    </record>
+</odoo>

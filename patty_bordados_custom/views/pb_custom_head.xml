@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pb_custom_head" model="ir.ui.view">
+        <field name="name">pb_custom_head</field>
+        <field name="inherit_id" ref="web.external_layout_bold"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[contains(@t-attf-class, 'header')]" position="replace">
+                <div t-attf-class="header o_company_#{company.id}_layout border-bottom border-dark p-2" t-att-style="report_header_style">
+                    <div class="o_clean_header">
+                    <div class="row">
+                        <div class="col-6">
+                            <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                        </div>
+                        <div class="col-5 offset-1" name="company_address">
+                            <ul class="list-unstyled">
+                                <li t-if="company.l10n_br_legal_name"><span t-field="company.l10n_br_legal_name" class="h2"/></li>
+                                <li t-if="company.mobile">Cel: <span class="o_force_ltr" t-field="company.mobile"/></li>
+                                <li t-if="company.email"><span t-field="company.email"/></li>
+                                <li t-if="company.website"><span t-field="company.website"/></li>
+                            </ul>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

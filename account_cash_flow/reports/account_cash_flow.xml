@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <template id="account_cash_flow_template_html_report">
+             <t t-call="web.html_container">
+                    <link rel="stylesheet" href="/account_cash_flow/static/src/css/style.css"/> 
+                    <script type="text/javascript" src="/account_cash_flow/static/src/lib/plotly-latest.min.js"></script>
+                    <!-- <h2>Gráfico</h2> -->
+                    <div class="row">
+                        <div class="col-12">
+                            <!-- <t t-raw="docs[0].draw_chart()" /> -->
+                        </div>
+                    </div>
+                    <!-- Definição das variaveis -->
+                    <t t-set="valores_pendentes" t-value="docs[0].calcule_total_pendente()"/>
+
+                    <div class="page mb-3">
+                        <!-- <h2>Fluxo de Caixa</h2>
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>Saldo de Caixa e Bancos</td>
+                                    <td style="text-align: right;"><span t-field="docs[0].start_balance" /></td>
+                                </tr>
+                                <tr class="active" t-foreach="docs[0].line_ids.filtered(lambda x: x.liquidity)" t-as="o">
+                                    <td style="padding-left: 50px;"><span t-field="o.name" /></td>
+                                    <td style="text-align: right;"><span t-field="o.amount" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Recebimento e pagamentos Pendente</td>
+                                    <td style="text-align: right;"><span t-field="docs[0].total_pendente" /></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td style="padding-left: 50px;">Recebimentos Pendentes</td>
+                                    <td style="text-align: right;"><span t-esc="valores_pendentes[0]['recebido']" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 50px;">Pagamentos Pendentes</td>
+                                    <td style="text-align: right;"><span t-esc="valores_pendentes[0]['pago']" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Contas a Receber/Pagar do Período</td>
+                                    <td style="text-align: right;"><span t-field="docs[0].period_balance" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 50px;">Contas a Receber no Período</td>
+                                    <td style="text-align: right;"><span t-field="docs[0].total_receivables" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 50px;">Contas a Pagar no Período</td>
+                                    <td style="text-align: right;"><span t-field="docs[0].total_payables" /></td>
+                                </tr>
+
+                                <tr class="info">
+                                    <td>Resumo Final</td>
+                                    <td style="text-align: right;"><span t-esc="docs[0].calcule_resumo_final()" /></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td style="padding-left: 50px;">Saldo de Caixa e Bancos</td>
+                                    <td style="text-align: right;"><span t-field="docs[0].start_balance" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 50px;">Recebimento e pagamentos Pendente</td>
+                                    <td style="text-align: right;"><span t-field="docs[0].total_pendente" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 50px;">Contas a Receber/Pagar do Período</td>
+                                    <td style="text-align: right;"><span t-field="docs[0].period_balance" /></td>
+                                </tr>
+                            </tbody>
+                        </table> -->
+
+                        <!-- <h2 class="text-center">Detalhamento</h2>
+
+                        <table class="table table-condensed table-bordered table-striped">
+                            <thead class="bg-primary">
+                                <tr>
+                                    <th style="color:white;width: 300px;" class="text-center">Descrição</th>
+                                    <th style="color:white;" class="text-center">Cliente/Fornecedor</th>
+                                    <th style="color:white;" class="text-center">Tipo</th>
+                                    <th style="color:white;width: 150px;" class="text-center">Data</th>
+                                    <th style="color:white;width: 100px;" class="text-center">A Receber</th>
+                                    <th style="color:white;width: 100px;" class="text-center">A pagar</th>
+                                    <th style="color:white;width: 100px;" class="text-center">Saldo da linha</th>
+                                    <th style="color:white;width: 130px;" class="th_accumulated text-center">Saldo Acumulado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="docs[0].line_ids.filtered(lambda x : (x.line_type in ['a_receber','a_pagar'] and x.status == 'vencido') )" t-as="o">
+                                    <td><span t-field="o.name" /></td>
+                                    <td><span t-field="o.partner_id" /></td>
+                                    <td><span t-esc="o.line_type" /></td>
+                                    <td class="text-center"><span t-field="o.date" /></td>
+                                    <td class="text-right"><span t-field="o.credit" /></td>
+                                    <td class="text-right"><span t-field="o.debit" /></td>
+                                    <td class="text-right"><span t-field="o.amount" /></td>
+                                    <td class="td_accumulated text-right"><span t-field="o.balance" /></td>
+                                </tr>
+                            </tbody>
+                        </table> -->
+                    </div>
+                    <div class="page mb-3">
+                        <h2 class="text-center">Detalhamento</h2>
+
+                        <table class="table table-hover">
+                            <tbody>
+
+                                <!-- Declaração das variaveis -->
+                                <t t-set="total" t-value="0"/>
+                                <t t-set="tipo_conta" t-value=""/>
+                                <t t-set="tipo_jornal" t-value=""/>
+                                <t t-set="registros" t-value="docs[0].organiza_detalhamento()"/>
+
+                                <t t-foreach="registros" t-as="linha">
+                                    <tr t-if="linha['linhas']">
+                                        <td colspan="3" class="h4 text-center" t-esc="linha['descricao']"></td>
+                                    </tr>
+
+                                    <t t-foreach="linha['linhas']" t-as="o" >
+
+                                        <t t-if="linha['ver_conta'] and (not tipo_conta == o.account_id )">
+                                            <tr class="active">
+                                                <td colspan="3" class="h5"><span t-field="o.account_id" /></td>
+                                            </tr>
+                                            <t t-set="tipo_conta" t-value="o.account_id"/>
+                                        </t>
+
+                                        <t t-if="linha['ver_jornal'] and (not tipo_jornal == o.journal_id) ">
+                                            <tr class="active">
+                                                <td colspan="3" class="h5"><span t-field="o.journal_id" /></td>
+                                            </tr>
+                                            <t t-set="tipo_jornal" t-value="o.journal_id"/>
+                                        </t>
+
+                                        <tr class="active" >
+                                            <td class="hm-td-1"><span t-field="o.date" /> </td>
+                                            <td class="text-left"><span t-field="o.name" /></td>
+                                            <td class="text-right;"><span t-field="o.amount" /></td>
+                                        </tr>
+                                    </t>
+
+                                    <!-- <t t-if="not linha['account'] == tipo_linha" > -->
+                                        <!-- imprime total -->
+                                        <!-- <tr class="active" t-if="total != 0">
+                                            <td></td>
+                                            <td style="text-align: right;"><b>Saldo -></b></td>
+                                            <td style="text-align: right;">
+                                                <b t-esc="total" t-options='{"widget": "float", "precision": 2}'/>
+                                            </td>
+                                            <t t-set="total" t-value="0"/>
+                                        </tr> -->
+                                        <!-- imprime tipo da linha -->
+                                        <!-- <tr class="active">
+                                            <t t-set="tipo_linha" t-value="linha['account']"/>
+                                            <td colspan="3" style="padding-left: 25px;">
+                                                <span class="h5"><t t-esc="linha['account']" /></span>
+                                            </td>
+                                        </tr> -->
+                                    <!-- </t> -->
+                                    <!-- <tr class="active" t-if="linha['account'] == tipo_linha">
+                                        <td style="padding-left: 50px;width: 200px;">
+                                            <span t-esc="linha['date'].strftime('%d/%m/%Y')" />
+                                        </td>
+                                        <td style="text-align: left;"><span t-esc="linha['name']" /></td>
+                                        <td style="text-align: right;">
+                                            <t t-esc="linha['amount']" t-options='{"widget": "float", "precision": 2}'/>
+                                        </td>
+                                    </tr> -->
+
+                                    <!-- <t t-set="total" t-value=" (total + linha['amount'] )"/> -->
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+            </t>
+        </template>
+
+        <template id="main_template_cash_flow">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="account_cash_flow.account_cash_flow_template_html_report" />
+                </t>
+            </t>
+        </template>
+
+        <report
+            id="account_cash_flow_html_report"
+            string="Relatorio Fluxo de Caixa"
+            model="account.cash.flow"
+            report_type="qweb-html"
+            name="account_cash_flow.main_template_cash_flow" 
+            file="account_cash_flow.reports.account_cash_flow"
+        />
+
+        <record id="paperformat_account_cash_flow" model="report.paperformat">
+            <field name="name">Cash Flow Format</field>
+            <field name="default" eval="True" />
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">3.0</field>
+            <field name="margin_left">3.0</field>
+            <field name="margin_right">3.0</field>
+            <field name="margin_bottom">6.0</field>
+        </record>
+
+        <record id="account_cash_flow_html_report" model="ir.actions.report">
+            <field name="paperformat_id" ref="paperformat_account_cash_flow"/>
+            <field name="name">Cash Flow</field>
+        </record>
+    </data>
+</openerp>

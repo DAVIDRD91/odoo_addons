@@ -1,0 +1,38 @@
+{
+    'name': 'Create Sales Order From POS',
+    'version': '15.0.0.1',
+    'category': 'Sales/Point of Sale',
+    'summary': 'Create sales order from pos screen and view sales order created from pos. Adds the option to choose delivery date.',
+    'description': 'Based on wt_create_so_from_pos-15.0.0.1 - Warlock Technologies Pvt Ltd plugin',
+    'author': 'Grupo Hasmany',
+    'website': 'https://www.instagram.com/hasmanysistemas/',
+    'support': 'david.lza@hotmail.com',
+    'depends': ['point_of_sale', 'sale_management'],
+    "data": ['views/pos_config.xml','views/pos_view_order.xml'],
+    'assets': {
+        'point_of_sale.assets': [
+            'hm_order_sale_from_pos/static/src/js/Screens/ProductScreen/ControlButtons/SaleOrderButton.js',
+            'hm_order_sale_from_pos/static/src/js/Screens/ProductScreen/ControlButtons/ViewSalesOrderButton.js',
+            'hm_order_sale_from_pos/static/src/js/Screens/SaleOrderScreen/SaleOrderScreen.js',
+            'hm_order_sale_from_pos/static/src/js/Screens/SaleOrderScreen/ViewSaleOrderList.js',
+            'hm_order_sale_from_pos/static/src/js/Screens/SaleOrderScreen/ViewSaleOrderRow.js',
+            'hm_order_sale_from_pos/static/src/js/Screens/SaleOrderScreen/SaleOrderControlPanel.js',
+            'hm_order_sale_from_pos/static/src/js/Popups/SalesOrderPopup.js',
+            'hm_order_sale_from_pos/static/src/js/Popups/CustomOrderDetailsPopup.js',
+            'hm_order_sale_from_pos/static/src/js/hm_models.js',
+            # 'hm_order_sale_from_pos/static/src/js/CustomClientDetailsEdit.js',
+            # 'hm_order_sale_from_pos/static/src/js/CustomClientListScreen.js',
+            # 'hm_order_sale_from_pos/static/src/js/CustomClientLine.js',
+        ],
+        'web.assets_qweb': [
+            'hm_order_sale_from_pos/static/src/xml/**/*',
+        ],
+    },
+    'images': ['static/images/screen_image.png'],
+    'application': True,
+    'installable': True,
+    'auto_install': False,
+    'license': 'OPL-1',
+    'external_dependencies': {
+    },
+}
