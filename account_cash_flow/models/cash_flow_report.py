@@ -17,6 +17,8 @@ class CashFlowReport(models.TransientModel):
             receivables = 0
             payables = 0
             pendente = 0
+            recebido_pendente = 0
+            pago_pendente = 0
             balance_period = 0
             for line in item.line_ids:
                 balance += line.amount
@@ -28,6 +30,10 @@ class CashFlowReport(models.TransientModel):
                     payables += line.amount
                 if line.line_type == 'ativo_corrente':
                     pendente += line.amount
+                    if line.amount > 0:
+                        recebido_pendente += line.amount
+                    else:
+                        pago_pendente += line.amount
                 if not line.liquidity and line.line_type != 'ativo_corrente':
                     balance_period += line.amount
             balance += item.start_amount
@@ -36,7 +42,9 @@ class CashFlowReport(models.TransientModel):
             item.total_payables = payables
             item.total_receivables = receivables
             item.total_pendente = pendente
-            item.period_balance = balance_period
+            item.total_recebido_pendente = recebido_pendente
+            item.total_pago_pendente = pago_pendente
+            item.period_balance = receivables+payables
             item.final_amount = balance
         return
 
@@ -55,6 +63,12 @@ class CashFlowReport(models.TransientModel):
     total_pendente = fields.Float(string="Total Realizado Pendente",
                                      compute="_compute_final_amount",
                                      digits='Account')
+    total_recebido_pendente = fields.Float(string="Total Realizado Pendente",
+                                     compute="_compute_final_amount",
+                                     digits='Account')
+    total_pago_pendente = fields.Float(string="Total Realizado Pendente",
+                                     compute="_compute_final_amount",
+                                     digits='Account')
     total_receivables = fields.Float(string="Total de Recebimentos",
                                      compute="_compute_final_amount",
                                      digits='Account')
@@ -71,21 +85,11 @@ class CashFlowReport(models.TransientModel):
         "account.cash.flow.line", "cashflow_id",
         string="Cash Flow Lines")
 
-    def calcule_total_pendente(self):
-        ret = []
-        for item in self:
-            recebido = 0
-            pago = 0
-            for line in item.line_ids:
-                if line.line_type == 'ativo_corrente':
-                    recebido += line.amount if line.amount > 0 else 0.0
-                    pago += line.amount if line.amount < 0 else 0.0
-                
-            ret.append({
-                'recebido': round(recebido,3),
-                'pago': round(pago,3),
-                'resultado' : recebido+pago,
-            })
+    def calc_total_linhas(self,linhas):
+        ret = 0
+        for item in linhas:
+            ret += item.amount
+
         return ret
 
     def calcule_resumo_final(self):
@@ -103,20 +107,25 @@ class CashFlowReport(models.TransientModel):
             ('reconciled', '=', False),
             ('move_id.state', '=', 'posted'),
             ('company_id', '=', self.env.user.company_id.id),
-            ('date', '<=', self.end_date),
+            '|', ('date', '<=', self.end_date),('date_maturity', '<=', self.end_date)
         ]
-
-        # se houver data inicial
-        if self.start_date:
-            domain += [('date', '>=', self.start_date)]
 
         # se houver filtro de contas
         if self.account_ids:
             domain += [('account_id.id', 'in', self.account_ids.ids)]
+        
+        # se ignora vencidos
+        if self.ignore_outstanding:
+            domain += [('date_maturity', '>=', date.today()) ]
+
+        # se houver data inicial
+        if self.start_date:
+            domain += [ '|', ('date', '>=', self.start_date),('date_maturity', '>=', self.start_date) ]
+            # domain += [('|', ('date_maturity', '>=', self.start_date) )]
 
         moveline_ids = moveline_obj.search(domain)
 
-        #moves = {}
+
         moves = []
         for move in moveline_ids:
             status  = "normal"
@@ -131,7 +140,7 @@ class CashFlowReport(models.TransientModel):
                 credit  = -move.credit if move.credit > 0 else 0.0
             amount = credit + debit
 
-            # temporário: não mostra as linhas com os campos zerados
+            # não mostra as linhas com os campos zerados
             if not credit and not debit:
                 continue
 
@@ -144,27 +153,11 @@ class CashFlowReport(models.TransientModel):
                 name = "%s/%s" % (move.move_id.name, move.partner_id.name or "Não Informado")
                 date = move.date_maturity
             elif move.account_id.hm_category_for_report in ['receita', 'despesa']:
-                name = "%s/%s" % (move.move_id.name, move.partner_id.name or move.journal_id.name)
+                name = "%s/%s/(%s)" % (move.move_id.name, move.partner_id.name or move.journal_id.name, move.name)
                 #Inverte o sinal do valor
                 amount = -amount if amount > 0 else abs(amount)
             else:
                 name = "%s/%s" % (move.move_id.name, move.ref or move.name)
-
-            # if chave not in moves:
-            #     moves[chave] = []
-
-            # moves[chave].append({
-            #     'name': name,
-            #     'partner': (move.partner_id.name or "Cliente Padrão"),
-            #     'journal': move.journal_id.name,
-            #     'account': move.account_id.name,
-            #     'line_type': move.account_id.hm_category_for_report,
-            #     'date': date,
-            #     'debit': debit,
-            #     'credit': credit,
-            #     'amount': amount,
-            #     'status': status,
-            # })
 
             moves.append({
                 'name': name,
@@ -180,80 +173,7 @@ class CashFlowReport(models.TransientModel):
                 'cashflow_id': self.id,
             })
 
-        # moves = self.organiza_linhas(moves)
-
         return moves
-    
-    # def organiza_linhas(self,moves):
-
-    #     # organiza ativo corrente
-    #     if moves['ativo_corrente']:
-    #         moves['ativo_corrente'] = sorted(moves['ativo_corrente'], key=lambda x: (x['journal'],x['date'])) 
-
-    #     # organiza a receber
-    #     if moves['a_receber']:
-    #         moves['a_receber'] = sorted(moves['a_receber'], key=lambda x: (x['journal'], x['date'])) 
-        
-    #     # organiza a pagar
-    #     if moves['a_pagar']:
-    #         moves['a_pagar'] = sorted(moves['a_pagar'], key=lambda x: (x['journal'], x['date'])) 
-
-    #     # organiza a receita
-    #     if moves['receita']:
-    #         moves['receita'] = sorted(moves['receita'], key=lambda x: (x['status'], x['account'], x['date'])) 
-        
-    #     # organiza a despesa
-    #     if moves['despesa']:
-    #         moves['despesa'] = sorted(moves['despesa'], key=lambda x: (x['status'], x['account'], x['date'])) 
-
-    #     return moves
-
-    def ver_detalhamento(self):
-        
-        ordem = [
-            {   'descricao':'Caixas e Bancos',
-                'filtro': ['liquidez'],
-                'ver_conta':True,
-                'ver_jornal':False,
-            },
-            {   'descricao':'Valores Pendentes',
-                'filtro': ['ativo_corrente'],
-                'ver_conta':False,
-                'ver_jornal':True, 
-            },
-            {   'descricao':'Contas a Receber',
-                'filtro': ['a_receber','normal'],
-                'ver_conta':False,
-                'ver_jornal':True, 
-            },
-            {   'descricao':'Contas a Receber Vencidos',
-                'filtro': ['a_receber','vencido'],
-                'ver_conta':False,
-                'ver_jornal':True, 
-            },
-            {   'descricao':'Contas a Pagar',
-                'filtro': ['a_pagar','normal'],
-                'ver_conta':False,
-                'ver_jornal':True, 
-            },
-            {   'descricao':'Contas a Pagar Vencidos',
-                'filtro': ['a_pagar','vencido'],
-                'ver_conta':False,
-                'ver_jornal':True, 
-            },
-            {   'descricao':'Registro de Receitas',
-                'filtro': ['receita'],
-                'ver_conta':True,
-                'ver_jornal':False, 
-            },
-            {   'descricao':'Registro de Despesas',
-                'filtro': ['despesa'],
-                'ver_conta': True,
-                'ver_jornal': False, 
-            },
-        ]
-        
-        return ordem
     
     def organiza_detalhamento(self):
         
@@ -312,10 +232,12 @@ class CashFlowReport(models.TransientModel):
             linhas = self.line_ids.filtered(lambda x : x.line_type == chave)
 
         #Organiza as linhas
-        if chave in ('receita','despesa'):
-            linhas.sorted( key=lambda x: (x.account_id,x.journal_id) )
+        if chave in ('ativo_corrente'):
+            linhas = linhas.sorted( key=lambda x: (x.journal_id.id) )
+        elif chave in ('receita','despesa'):
+            linhas = linhas.sorted( key=lambda x: (x.account_id.id) )
         else:
-            linhas = linhas.sorted( key=lambda x: (x.account_id,x.journal_id,x.date) )
+            linhas = linhas.sorted( key=lambda x: (x.account_id.id,x.journal_id.id,x.date) )
 
         return linhas
     
@@ -343,65 +265,14 @@ class CashFlowReport(models.TransientModel):
                 })
         return liquidity_lines
 
-    # def calculate_moves(self):
-    #     moveline_obj = self.env['account.move.line']
-    #     domain = [
-    #         '|',
-    #         ('account_id.hm_category_for_report', '=', 'a_receber'),'|',
-    #         ('account_id.hm_category_for_report', '=', 'a_pagar'),
-    #         ('account_id.hm_category_for_report', '=', 'ativo_corrente'),
-    #         ('reconciled', '=', False),
-    #         ('move_id.state', '!=', 'draft'),
-    #         ('company_id', '=', self.env.user.company_id.id),
-    #         ('date_maturity', '<=', self.end_date),
-    #     ]
-    #     if self.ignore_outstanding:
-    #         domain += [('date_maturity', '>=', date.today())]
-    #     moveline_ids = moveline_obj.search(domain)
-
-    #     moves = []
-    #     for move in moveline_ids:
-    #         # if move.amount_residual:
-    #         debit = move.amount_residual if move.amount_residual < 0 else 0.0
-    #         credit = move.amount_residual if move.amount_residual > 0 else 0.0
-    #         amount = credit + debit
-    #         # else:
-    #         #     debit = move.debit if move.debit < 0 else 0.0
-    #         #     credit = move.credit if move.credit > 0 else 0.0
-    #         #     amount = credit + debit
-
-    #         # Temporário: não mostra as linhas com os campos 'a receber' e
-    #         # 'a pagar' zerados
-    #         if not credit and not debit:
-    #             continue
-
-    #         name = "%s/%s" % (move.move_id.name, move.ref or move.name)
-    #         moves.append({
-    #             'name': name,
-    #             'cashflow_id': self.id,
-    #             'partner_id': move.partner_id.id,
-    #             'journal_id': move.journal_id.id,
-    #             'account_id': move.account_id.id,
-    #             'line_type': move.account_id.hm_category_for_report,
-    #             'date': move.date_maturity,
-    #             'debit': debit,
-    #             'credit': credit,
-    #             'amount': amount,
-    #         })
-    #     return moves
-
     def action_calculate_report(self):
         self.write({'line_ids': [(5, 0, 0)]})
-        balance = self.start_amount
         liquidity_lines = self.calculate_liquidity()
-        #move_lines = self.calculate_moves()
         move_lines = self.pegue_linhas()
 
         move_lines.sort(key=lambda x: (x['line_type'],x['date']) )
 
         for lines in liquidity_lines+move_lines:
-            #balance += lines['credit'] + lines['debit']
-            #lines['balance'] = balance
             self.env['account.cash.flow.line'].create(lines)
 
 
@@ -411,9 +282,6 @@ class CashFlowReportLine(models.TransientModel):
 
     name = fields.Char(string="Descrição", required=True)
     liquidity = fields.Boolean(strign=u"Liquidez?")
-    # line_type = fields.Selection(
-    #     [('receivable', 'Recebível'), ('payable', 'Pagável')], string="Tipo")
-    #line_type = fields.Selection([], string="Tipo")
     line_type = fields.Selection(
         [('liquidez', 'Liquidez'), 
          ('a_receber', 'A receber'),
