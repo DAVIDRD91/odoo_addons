@@ -1,0 +1,7 @@
+"id","sequence","name","type","transaction_fee","portion_transaction_fee","days_to_receive"
+"master_cred",1,"Master Cred","credito",3.29,0.0,1
+"visa_cred",2,"Visa Cred","credito",3.29,0.0,1
+"ello_cred",3,"Ello Cred","credito",3.97,0.0,1
+"master_deb",4,"Master Deb","debito",1.73,0.0,1
+"visa_deb",5,"Visa Deb","debito",1.73,0.0,1
+"ello_deb",6,"Ello Deb","debito",2.66,4.50,1

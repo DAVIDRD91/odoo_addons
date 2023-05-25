@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hm_card_operators,hm.card.operators,model_hm_card_operators,base.group_user,1,1,1,1
+
+
+
+
+
+

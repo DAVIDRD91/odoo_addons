@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hm_view_pos_payment_tree_inherit" model="ir.ui.view">
+            <field name="name">hm.pos.payment.tree.inherit</field>
+            <field name="model">pos.payment</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_payment_tree"/>
+            <field name="arch" type="xml">
+                <field name="amount" position="after">
+                    <field name="hm_amount_card_fee"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hm_view_account_payment_register_form_inherit" model="ir.ui.view">
+            <field name="name">hm.account.payment.register.form.inherit</field>
+            <field name="model">account.payment.register</field>
+            <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+            <field name="arch" type="xml">
+                <field name="hide_payment_method_line" position="after">
+                    <field name="hm_hide_operator_id" invisible="1"/>
+                </field>
+                <xpath expr="//group[@name='group1']//field[@name='journal_id']" position="after">
+                    <!-- <field name="hm_operator_id" widget="selection"/> -->
+                    <field name="hm_operator_id"
+                            required="1"  options="{'no_create': True, 'no_open': True}"
+                            attrs="{'invisible': [('hm_hide_operator_id', '=', True)]}"
+                    />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

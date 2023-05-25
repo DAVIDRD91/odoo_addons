@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="SelectCardFlagPopupWidget" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup " style="padding-bottom:15px; min-height:200px;">
+                <main class="body ">
+                    <header class="title">
+                        <t t-esc="props.title" />
+                    </header>
+                    <div class="container">
+                        <div class="d-flex align-content-center flex-wrap "
+                            style="padding-top: 15px;"
+                        >
+                            <t t-foreach="props.array" t-as="item" t-key="item.id">
+                                <button class="control-button" 
+                                    t-on-click="confirma(item)"
+                                    t-esc="item.name"
+                                >
+                                </button>
+                            </t>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </t>
+</templates>

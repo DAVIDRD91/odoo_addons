@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Definir a visualização do formulário -->
+    <record id="hm_card_operators_form" model="ir.ui.view">
+        <field name="name">card.operators.form</field>
+        <field name="model">hm.card.operators</field>
+        <field name="arch" type="xml">
+            <form string="Operadoras de Cartão">
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nome"/></h1>
+                    </div>
+                    <group>
+                        <group >
+                            <field name="sequence" placeholder="Codigo"/>
+                            <field name="type" />
+                            <field name="transaction_fee" />
+                            <field name="portion_transaction_fee" />
+                            <field name="days_to_receive" />
+                    
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Definir a visualização da lista -->
+    <record id="hm_card_operators_tree" model="ir.ui.view">
+        <field name="name">card.operators.tree</field>
+        <field name="model">hm.card.operators</field>
+        <field name="arch" type="xml">
+            <tree >
+                <field name="sequence" class="text-center" width="0.5" placeholder="Codigo"/>
+                <field name="name"/>
+                <field name="type" class="text-center"/>
+                <field name="transaction_fee" class="text-center"/>
+                <field name="portion_transaction_fee" class="text-center"/>
+                <field name="days_to_receive" class="text-center"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Definir a ação da janela -->
+    <record id="action_hm_card_operators" model="ir.actions.act_window">
+        <field name="name">Operadoras de Cartão</field>
+        <field name="res_model">hm.card.operators</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Adicione uma operadora de cartão
+            </p>
+        </field>
+    </record>
+
+    <!-- Definir o item de menu -->
+    <menuitem sequence="11"
+            id="hm_card_operators_menu" 
+            name="Operadoras de Cartão" 
+            parent="l10n_br_account.menu_br_payments"
+            action="action_hm_card_operators" 
+        />
+</odoo>
