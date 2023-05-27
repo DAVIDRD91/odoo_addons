@@ -14,6 +14,7 @@
         'views/pos_payment_method.xml',
         'views/view_pos_pos_form.xml',
         'views/view_pos_payment_tree.xml',
+        'views/account_payment_view.xml',
         'security/ir.model.access.csv',
         'data/hm.card.operators.csv',
         'wizard/account_payment_register_views.xml',

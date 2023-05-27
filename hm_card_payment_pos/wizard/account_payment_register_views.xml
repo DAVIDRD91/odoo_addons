@@ -11,9 +11,15 @@
                 </field>
                 <xpath expr="//group[@name='group1']//field[@name='journal_id']" position="after">
                     <!-- <field name="hm_operator_id" widget="selection"/> -->
+                    <!-- <field name="hm_operator_id"
+                            options="{'no_create': True, 'no_open': True}"
+                            attrs="{'invisible': [('hm_hide_operator_id', '=', True)],
+                                    'required': [('hm_hide_operator_id', '=', True)
+                            }"
+                    /> -->
                     <field name="hm_operator_id"
-                            required="1"  options="{'no_create': True, 'no_open': True}"
-                            attrs="{'invisible': [('hm_hide_operator_id', '=', True)]}"
+                        options="{'no_create': True, 'no_open': True}"
+                        attrs="{'invisible': [('hm_hide_operator_id', '=', True)], 'required': [('hm_hide_operator_id', '!=', True)]}"
                     />
                 </xpath>
             </field>
