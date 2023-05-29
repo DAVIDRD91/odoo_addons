@@ -14,7 +14,9 @@ odoo.define('hm_card_payment_pos.HmPaymentScreen', function(require) {
              * @override
              */
             async addNewPaymentLine({ detail: paymentMethod }) {
-                
+                //Chama a função addNewPaymentLine original
+                super.addNewPaymentLine({ detail: paymentMethod });
+
                 var idsCardOperators = paymentMethod.hm_card_operators_ids;
 
                 var listObjCardOperators = this.env.pos.getCardOperatorsByIds(idsCardOperators);
@@ -27,14 +29,10 @@ odoo.define('hm_card_payment_pos.HmPaymentScreen', function(require) {
 
                     if(confirmed){
                         
-                        paymentMethod['hm_card_operators_select'] = payload.selectCard
+                        this.selectedPaymentLine.hm_card_operators_select = payload.selectCard
                     }
 
                 }
-                
-                //Chama a função addNewPaymentLine original
-                super.addNewPaymentLine({ detail: paymentMethod });
-
                 //Execução apos adicionar nova linha de pagamento
                 this.calc_amount_card_fee();
             }
@@ -54,10 +52,10 @@ odoo.define('hm_card_payment_pos.HmPaymentScreen', function(require) {
 
             calc_amount_card_fee() {
                 
-                var payment_method = this.selectedPaymentLine.payment_method;
+                var hm_card_operators_select = this.selectedPaymentLine.hm_card_operators_select;
                 
-                if(payment_method.hm_card_operators_select !== undefined){
-                    var transaction_fee = payment_method.hm_card_operators_select.transaction_fee;
+                if(hm_card_operators_select !== null){
+                    var transaction_fee = hm_card_operators_select.transaction_fee;
                     var amount = this.selectedPaymentLine.amount;
                     var hm_amount_card_fee = (amount * (transaction_fee / 100)); 
                     this.selectedPaymentLine.hm_amount_card_fee = round_di(parseFloat(hm_amount_card_fee) || 0, 2);

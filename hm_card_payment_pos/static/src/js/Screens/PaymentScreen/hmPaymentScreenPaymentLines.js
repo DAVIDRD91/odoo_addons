@@ -8,9 +8,8 @@ odoo.define('point_of_sale.HmPaymentScreenPaymentLines', function(require) {
         class extends PaymentScreenPaymentLines {
 
             getNameCardOperatorsSelect(line) {
-                
-                if(line.payment_method.hm_card_operators_select !== undefined){
-                    return line.payment_method.hm_card_operators_select.name;
+                if (line.hm_card_operators_select !== null) {
+                    return line.hm_card_operators_select.name;
                 }
 
                 return '';

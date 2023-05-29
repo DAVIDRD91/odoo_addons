@@ -44,14 +44,17 @@ odoo.define('hm_card_payment_pos.models', function (require) {
         initialize: function (attributes, options) {
             _super_paymentline.initialize.apply(this, arguments);
             this.hm_amount_card_fee = 0;
+            this.hm_card_operators_select = null;
         },
         init_from_JSON: function (json) {
             _super_paymentline.init_from_JSON.apply(this, arguments);
             this.hm_amount_card_fee = json.hm_amount_card_fee;
+            this.hm_card_operators_select = json.hm_card_operators_select;
         },
         export_as_JSON: function () {
             return _.extend(_super_paymentline.export_as_JSON.apply(this, arguments), {
                 hm_amount_card_fee: this.hm_amount_card_fee,
+                hm_card_operators_select: this.hm_card_operators_select,
             });
         },
     });

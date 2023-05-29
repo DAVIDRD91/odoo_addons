@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="PaymentScreenPaymentLines" t-inherit="point_of_sale.PaymentScreenPaymentLines" t-inherit-mode="extension" owl="1">
-        <xpath expr="//div[@class='paymentline']/div[@class='payment-name']" position="replace">
+        <xpath expr="//div[@class='paymentline selected']/div[@class='payment-name']" position="replace">
             <div>
                 <div class="payment-name">
                     <t t-esc="line.payment_method.name" />
@@ -16,7 +16,7 @@
                 > </small>
             </div>
         </xpath>
-        <xpath expr="//div[@class='paymentline selected']/div[@class='payment-name']" position="replace">
+        <xpath expr="//div[@class='paymentline']/div[@class='payment-name']" position="replace">
             <div>
                 <div class="payment-name">
                     <t t-esc="line.payment_method.name" />
