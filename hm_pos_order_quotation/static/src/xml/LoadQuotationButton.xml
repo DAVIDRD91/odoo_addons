@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="LoadQuotationButton" owl="1">
+        <span class="control-button js_load_quotation" style="background-color: #875a7b;">
+            <span> </span>
+            <span style="color: white">Load Quotation</span>
+        </span>
+    </t>
+</templates>
