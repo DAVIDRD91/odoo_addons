@@ -24,8 +24,27 @@ odoo.define("pos_order_quotation.CreateQuotationButton", function(require) {
         }
 
         async onClick() {
+            
             var self = this;
-            var quotation_number = null
+            var quotation_number = null;
+
+            //Validação Produtos
+            if (!this.currentOrder.export_as_JSON().lines.length) {
+                this.showPopup('QuotationPopUpAlert', {
+                    title: this.env._t('Alerta'),
+                    body: this.env._t('Selecione ao menos um produto'),
+                })
+                return;
+            }
+            //Validação Cliente
+            if (!self.client) {
+                this.showPopup('QuotationPopUpAlert', {
+                    title: this.env._t('Alerta'),
+                    body: this.env._t('Selecione o cliente.'),
+                })
+                return;
+            }
+
             try {
                 quotation_number = await this.rpc({
                     model: 'pos.quotation',
@@ -37,8 +56,8 @@ odoo.define("pos_order_quotation.CreateQuotationButton", function(require) {
                 })
             } catch (error) {
                 this.showPopup('QuotationPopUpAlert', {
-                    title: this.env._t('Error'),
-                    body: this.env._t("Could not reach the server. Please check that you have an active internet connection, the server address you entered is valid, and the server is online."),
+                    title: this.env._t('Erro'),
+                    body: this.env._t("Não foi possível acessar o servidor. Tente novamente mais tarde!"),
                 })
                 return;
             }
@@ -47,19 +66,12 @@ odoo.define("pos_order_quotation.CreateQuotationButton", function(require) {
                 payload,
                 print
             } = await this.showPopup('SaveQuotationPopUp', {
-                title: this.env._t('Create Quotation'),
+                title: this.env._t('Criar Cotação'),
                 startingValue: '',
                 quotationNumber: quotation_number,
                 customer: self.client,
             });
             if (confirmed) {
-                if (!this.currentOrder.export_as_JSON().lines.length) {
-                    this.showPopup('QuotationPopUpAlert', {
-                        title: this.env._t('Warning'),
-                        body: this.env._t('At least one product is required to create the quotation'),
-                    })
-                    return;
-                }
                 if (print) {
                     self.showScreen("ReceiptScreen");
                 }
@@ -85,13 +97,13 @@ odoo.define("pos_order_quotation.CreateQuotationButton", function(require) {
                 } catch (error) {
                     this.showPopup('QuotationPopUpAlert', {
                         title: this.env._t('Error'),
-                        body: this.env._t("Could not reach the server. Please check that you have an active internet connection, the server address you entered is valid, and the server is online."),
+                        body: this.env._t("Não foi possível acessar o servidor. Tente novamente mais tarde!"),
                     })
                     return;
                 }
                 this.showPopup('QuotationPopUpAlert', {
-                    title: this.env._t('Success'),
-                    body: this.env._t(quotation_number + ' Created Successfully'),
+                    title: this.env._t('Sucesso'),
+                    body: this.env._t(quotation_number + ' Criado com Sucesso!'),
                 })
             }
         }

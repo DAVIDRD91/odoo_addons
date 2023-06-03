@@ -3,7 +3,7 @@
     <t t-name="LoadQuotationButton" owl="1">
         <span class="control-button js_load_quotation" style="background-color: #875a7b;">
             <span> </span>
-            <span style="color: white">Load Quotation</span>
+            <span style="color: white">Carregar Cotação</span>
         </span>
     </t>
 </templates>

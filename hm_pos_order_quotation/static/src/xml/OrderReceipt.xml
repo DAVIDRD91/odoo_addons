@@ -6,7 +6,7 @@
                 <br/>
                 <div class="quotation">
                     <div>
-                        Seller
+                        Vendedor:
                         <span class="pos-receipt-right-align"><t t-esc="receipt.seller"/></span>
                     </div>
                 </div>
@@ -15,11 +15,11 @@
                 <br/>
                 <div class="related-quotation">
                     <div>
-                        Customer
+                        Cliente:
                         <span class="pos-receipt-right-align"><t t-esc="receipt.quotation.customer"/></span>
                     </div>
                     <div>
-                        Related Quotation
+                        Cotação:
                         <span class="pos-receipt-right-align"><t t-esc="receipt.quotation.name"/></span>
                     </div>
                 </div>
