@@ -40,21 +40,29 @@
         'security/ir.model.access.csv',
         # 'views/assests.xml',
         'views/pos_quotation.xml',
-        'data/ir_sequence.xml',
         'views/pos_order.xml',
+        'data/ir_sequence.xml',
     ],
     'assets': {
         'point_of_sale.assets': [
-            'hm_pos_order_quotation/static/src/js/**/*',
-            
+            'hm_pos_order_quotation/static/src/css/pos_quotation.css',
+            'hm_pos_order_quotation/static/src/js/AlertPopups.js',
+            'hm_pos_order_quotation/static/src/js/models.js',
+            'hm_pos_order_quotation/static/src/js/db.js',
+            'hm_pos_order_quotation/static/src/js/CreateQuotationButton.js',
+            'hm_pos_order_quotation/static/src/js/LoadQuotationButton.js',
+            'hm_pos_order_quotation/static/src/js/SaveQuotationPopUp.js',
+            'hm_pos_order_quotation/static/src/js/LoadQuotationPopup.js',
+            'hm_pos_order_quotation/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js',
+            'hm_pos_order_quotation/static/src/js/OrderManagementScreen/MobileSaleOrderManagementScreen.js',
+            'hm_pos_order_quotation/static/src/js/OrderManagementScreen/SaleOrderFetcher.js',
+            'hm_pos_order_quotation/static/src/js/OrderManagementScreen/SaleOrderList.js',
+            'hm_pos_order_quotation/static/src/js/OrderManagementScreen/SaleOrderManagementControlPanel.js',
+            'hm_pos_order_quotation/static/src/js/OrderManagementScreen/SaleOrderRow.js',
         ],
         'web.assets_qweb': [
             'hm_pos_order_quotation/static/src/xml/**/*',
         ],
-        # 'web.assets_backend': [
-        #     'om_account_asset/static/src/scss/account_asset.scss',
-        #     'om_account_asset/static/src/js/account_asset.js',
-        # ],
     },
     # 'qweb': [
     #     'static/src/xml/LoadQuotationButton.xml',
@@ -64,6 +72,6 @@
     #     'static/src/xml/OrderReceipt.xml',
     #     'static/src/xml/AlertPopups.xml',
     # ],
-    "images": ["static/description/banner.gif"],
+    "images": ["hm_pos_order_quotation/static/description/banner.gif"],
     'installable': True,
 }

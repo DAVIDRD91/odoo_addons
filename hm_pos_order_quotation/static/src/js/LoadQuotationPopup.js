@@ -74,8 +74,8 @@ odoo.define("pos_order_quotation.LoadQuotationPopup", function(require) {
         async confirm() {
             if (!this.selectedQuote) {
                 this.showPopup('QuotationPopUpAlert', {
-                    title: this.env._t('Message'),
-                    body: this.env._t("No Quotation Loaded. Please select a quotation to load"),
+                    title: this.env._t('Mensagem'),
+                    body: this.env._t("Nenhuma cotação carregada. Selecione uma cotação para carregar"),
                 });
                 return;
             }
@@ -106,8 +106,8 @@ odoo.define("pos_order_quotation.LoadQuotationPopup", function(require) {
                     args: [domain],
                 }).catch(function(unused, event) {
                     self.showPopup('QuotationPopUpAlert', {
-                        title: self.env._t('Error'),
-                        body: self.env._t("Could not reach the server. Please check that you have an active internet connection, the server address you entered is valid, and the server is online."),
+                        title: self.env._t('Erro'),
+                        body: self.env._t("Sem conexão com o servidor, tente mais tarde!"),
                     });
                     return;
                 }).then(function(quotations) {

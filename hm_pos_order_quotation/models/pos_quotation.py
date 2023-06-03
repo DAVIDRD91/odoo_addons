@@ -36,16 +36,16 @@ class POSQuotation(models.Model):
     _sql_constraints = [
         ('name_ref', 'unique(ref)', 'Quotation Ref must be unique !'),
     ]
-    state = fields.Selection([('draft', 'Draft'), ('loaded', 'Loaded')], default='draft')
-
+    state = fields.Selection([('draft', 'Draft'), ('loaded', 'Loaded'), ('cancel', 'Cancel')], default='draft')
+    
     @api.model
     def get_quotation_number(self):
-        sequence = self.env.ref('pos_order_quotation.sequence_quote_sequence')
-        return 'QUOTE ID ' + str(sequence.number_next_actual)
+        sequence = self.env.ref('hm_pos_order_quotation.sequence_quote_sequence')
+        return str(sequence.number_next_actual)
 
     @api.model
     def create_quotation(self, vals):
-        sequence = self.env.ref('pos_order_quotation.sequence_quote_sequence')
+        sequence = self.env.ref('hm_pos_order_quotation.sequence_quote_sequence')
         quote_id = self.create(vals)
         quotation = self.search_read([('id', '=', quote_id.id)])
         return [quotation, sequence._next()]
@@ -75,11 +75,19 @@ class POSQuotation(models.Model):
                 result['partner_id'].append(partner.name)
         return results
 
+    def action_cancel(self):
+        
+        return self.write({'state': 'cancel'})
+
+
 
 class POSQuotationLines(models.Model):
     _name = "pos.quotation.line"
     _description = "Point of Sale Order Lines"
     _rec_name = "product_id"
+
+    #Inputs Custom Hasmany
+    customer_note = fields.Text('Customer note')
 
     company_id = fields.Many2one('res.company', string='Company', related="quotation_id.company_id", store=True)
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True,

@@ -45,8 +45,8 @@ odoo.define('pos_order_quotation.SaveQuotationPopUp', function(require) {
 
     SaveQuotationPopUp.template = 'SaveQuotationPopUp';
     SaveQuotationPopUp.defaultProps = {
-        confirmText: 'Save',
-        cancelText: 'Cancel',
+        confirmText: 'Salvar',
+        cancelText: 'Cancelar',
         title: '',
         body: '',
         startingValue: '',

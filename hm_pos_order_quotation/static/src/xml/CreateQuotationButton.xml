@@ -3,7 +3,7 @@
     <t t-name="CreateQuotationButton" owl="1">
         <span class="control-button js_save_quotation" style="background-color: #875a7b;">
             <span> </span>
-            <span style="color: white">Create Quotation</span>
+            <span style="color: white">Criar Cotação</span>
         </span>
     </t>
 </templates>

@@ -13,7 +13,7 @@ odoo.define('pos_order_quotation.QuotationPopUpAlert', function(require) {
             super(...arguments);
             setTimeout(function() {
                 $(".cancel").click();
-            }, 2000);
+            }, 3000);
         }
     }
 
