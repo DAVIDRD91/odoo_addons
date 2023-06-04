@@ -57,8 +57,6 @@ odoo.define('wt_create_so_from_pos.SaleOrderButton', function(require) {
                             args: [oderdetails],
                         });
 
-                        console.log('resultado ',result)
-
                         if(result){
                             
                             //Limpa a tela do pos

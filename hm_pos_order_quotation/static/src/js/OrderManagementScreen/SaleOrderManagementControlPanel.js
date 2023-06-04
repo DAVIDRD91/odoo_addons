@@ -46,14 +46,6 @@ odoo.define('hm_pos_order_quotation.HmSaleOrderManagementControlPanel', function
                 this.trigger('search', this._computeDomain());
             }
         }
-        // get showPageControls() {
-        //     return HmSaleOrderFetcher.lastPage > 1;
-        // }
-        // get pageNumber() {
-        //     const currentPage = HmSaleOrderFetcher.currentPage;
-        //     const lastPage = HmSaleOrderFetcher.lastPage;
-        //     return isNaN(lastPage) ? '' : `(${currentPage}/${lastPage})`;
-        // }
         get validSearchTags() {
             return VALID_SEARCH_TAGS;
         }

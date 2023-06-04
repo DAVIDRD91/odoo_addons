@@ -9,7 +9,6 @@ odoo.define('hm_pos_order_quotation.HmSaleOrderFetcher', function (require) {
     class HmSaleOrderFetcher extends EventBus {
         constructor() {
             super();
-            this.currentPage = 1;
             this.ordersToShow = [];
             this.totalCount = 0;
             this.searchDomain = [
@@ -20,22 +19,6 @@ odoo.define('hm_pos_order_quotation.HmSaleOrderFetcher', function (require) {
 
 
         /**
-         * for nPerPage = 10
-         * +--------+----------+
-         * | nItems | lastPage |
-         * +--------+----------+
-         * |     2  |       1  |
-         * |    10  |       1  |
-         * |    11  |       2  |
-         * |    30  |       3  |
-         * |    35  |       4  |
-         * +--------+----------+
-         */
-        get lastPage() {
-            const nItems = this.totalCount;
-            return Math.trunc(nItems / (this.nPerPage + 1)) + 1;
-        }
-        /**
          * Chamar esse métodos preenche o evento `orderShow`, então acionador` update`.
          * @Related Get
          *
@@ -45,14 +28,6 @@ odoo.define('hm_pos_order_quotation.HmSaleOrderFetcher', function (require) {
          */
         async fetch() {
             try {
-                // let limit, offset;
-                // let start, end;
-                // // Show orders from the backend.
-                // offset =
-                //     this.nPerPage +
-                //     (this.currentPage - 1 - 1) *
-                //         this.nPerPage;
-                // limit = this.nPerPage;
                 this.ordersToShow = await this._fetch();
 
                 this.trigger('update');
@@ -73,8 +48,6 @@ odoo.define('hm_pos_order_quotation.HmSaleOrderFetcher', function (require) {
          * If the order is already in cache, the full information about that
          * order is not fetched anymore, instead, we use info from cache.
          *
-         * @param {number} limit
-         * @param {number} offset
          */
         async _fetch() {
             const sale_orders = await this._getOrderIdsForCurrentPage();
@@ -93,18 +66,6 @@ odoo.define('hm_pos_order_quotation.HmSaleOrderFetcher', function (require) {
             });
         }
 
-        nextPage() {
-            if (this.currentPage < this.lastPage) {
-                this.currentPage += 1;
-                this.fetch();
-            }
-        }
-        prevPage() {
-            if (this.currentPage > 1) {
-                this.currentPage -= 1;
-                this.fetch();
-            }
-        }
         /**
          * @param {integer|undefined} id id of the cached order
          * @returns {Array<models.Order>}
@@ -118,12 +79,6 @@ odoo.define('hm_pos_order_quotation.HmSaleOrderFetcher', function (require) {
         setComponent(comp) {
             this.comp = comp;
             return this;
-        }
-        setNPerPage(val) {
-            this.nPerPage = val;
-        }
-        setPage(page) {
-            this.currentPage = page;
         }
 
         async rpc() {

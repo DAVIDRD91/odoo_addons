@@ -53,7 +53,7 @@ class POSQuotation(models.Model):
     def get_quotation_details(self):
         return {
             'partner_id': self.partner_id.id,
-            'lines': [{'price_unit': line.price_unit, 'discount': line.discount, 'qty': line.qty,
+            'lines': [{'customer_note': line.customer_note,'price_unit': line.price_unit, 'discount': line.discount, 'qty': line.qty,
                        'product_id': line.product_id.id} for line in
                       self.lines],
             'quotation_id': self.id,

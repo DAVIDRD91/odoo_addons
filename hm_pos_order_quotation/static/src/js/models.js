@@ -24,7 +24,7 @@ odoo.define("pos.quotation", function(require) {
         model: 'pos.quotation.line',
         label: 'load_quotations_line',
         fields: ['company_id', 'product_id', 'price_unit', 'qty', 'price_subtotal', 'price_subtotal_incl',
-            'discount', 'quotation_id', 'product_uom_id', 'currency_id', 'tax_ids'
+            'discount', 'quotation_id', 'product_uom_id', 'currency_id', 'tax_ids','customer_note'
         ],
         domain: function(self) {
             return [

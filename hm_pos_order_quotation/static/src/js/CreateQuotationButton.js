@@ -72,46 +72,42 @@ odoo.define("pos_order_quotation.CreateQuotationButton", function(require) {
                 customer: self.client,
             });
             if (confirmed) {
-                var returnOk = false;
                 if (print) {
                     self.showScreen("ReceiptScreen");
-                }else{
-                    self.showScreen("HmSaleOrderManagementScreen");
                 }
                 const val = this.formatCurrentOrder(payload, quotation_number);
                 try {
-                    this.rpc({
+                    const result = await this.rpc({
                         model: 'pos.quotation',
                         method: 'create_quotation',
                         args: [val],
                         kwargs: {
                             context: this.env.session.user_context
                         },
-                    }).then((result) => {
-                        if (result) {
-                            self.env.pos.quotation_number = result[1];
-
-                            self.env.pos.db.add_quotations(result[0]);
-
-                            self.currentOrder.destroy({'reason':'abandon'})
-                            
-                            returnOk = true;
-                            
-                        }
                     });
+
+                    if (result) {
+                        self.env.pos.quotation_number = result[1];
+    
+                        self.env.pos.db.add_quotations(result[0]);
+    
+                        self.currentOrder.destroy({'reason':'abandon'})
+    
+                        if (!print) {
+                            self.showScreen("HmSaleOrderManagementScreen");
+                        }
+    
+                        this.showPopup('QuotationPopUpAlert', {
+                            title: this.env._t('Sucesso'),
+                            body: this.env._t(quotation_number + ' Criado com Sucesso!'),
+                        })
+                    }
                 } catch (error) {
                     this.showPopup('QuotationPopUpAlert', {
                         title: this.env._t('Error'),
                         body: this.env._t("Não foi possível acessar o servidor. Tente novamente mais tarde!"),
                     })
                     return;
-                }
-
-                if(returnOk){
-                    this.showPopup('QuotationPopUpAlert', {
-                        title: this.env._t('Sucesso'),
-                        body: this.env._t(quotation_number + ' Criado com Sucesso!'),
-                    })
                 }
             }
         }
