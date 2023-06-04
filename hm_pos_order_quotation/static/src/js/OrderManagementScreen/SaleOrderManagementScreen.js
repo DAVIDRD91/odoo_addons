@@ -107,8 +107,13 @@ odoo.define('hm_pos_order_quotation.HmSaleOrderManagementScreen', function (requ
                     }).then(async function(quotation) {
                         if (quotation) {
                             if (!error) {
-                                self.env.pos.add_new_order();
+                                // self.env.pos.add_new_order();
                                 let new_order = self.env.pos.get_order();
+                                //Valida se a ordem esta vazia
+                                if(new_order.get_orderlines().length > 0){
+                                    self.env.pos.add_new_order();
+                                    new_order = self.env.pos.get_order();
+                                }
                                 let client = self.env.pos.db.get_partner_by_id(quotation.partner_id)
                                 if (quotation.partner_id && !client) {
                                     await self.env.pos.load_new_partners();
@@ -125,9 +130,10 @@ odoo.define('hm_pos_order_quotation.HmSaleOrderManagementScreen', function (requ
                                     orderline.set_unit_price(line.price_unit);
                                     orderline.set_discount(line.discount);
                                     orderline.set_quantity(line.qty, true);
+                                    orderline.set_customer_note(line.customer_note)
                                     new_order.add_orderline(orderline);
                                 });
-                                let quotation_tags = {};
+                                
                                 new_order.quotation_id = quotation.id;
                                 new_order.quotation_name = quotation.ref;
                                 new_order.seller_id = quotation.seller_id;

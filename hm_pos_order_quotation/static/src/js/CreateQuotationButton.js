@@ -44,7 +44,7 @@ odoo.define("pos_order_quotation.CreateQuotationButton", function(require) {
                 })
                 return;
             }
-
+            //Testa conexão
             try {
                 quotation_number = await this.rpc({
                     model: 'pos.quotation',
@@ -72,8 +72,11 @@ odoo.define("pos_order_quotation.CreateQuotationButton", function(require) {
                 customer: self.client,
             });
             if (confirmed) {
+                var returnOk = false;
                 if (print) {
                     self.showScreen("ReceiptScreen");
+                }else{
+                    self.showScreen("HmSaleOrderManagementScreen");
                 }
                 const val = this.formatCurrentOrder(payload, quotation_number);
                 try {
@@ -87,11 +90,13 @@ odoo.define("pos_order_quotation.CreateQuotationButton", function(require) {
                     }).then((result) => {
                         if (result) {
                             self.env.pos.quotation_number = result[1];
-                            let counter = self.currentOrder.orderlines.length
-                            for (let i = 0; i < counter; i++) {
-                                self.currentOrder.remove_orderline(self.currentOrder.orderlines.models[0])
-                            }
+
                             self.env.pos.db.add_quotations(result[0]);
+
+                            self.currentOrder.destroy({'reason':'abandon'})
+                            
+                            returnOk = true;
+                            
                         }
                     });
                 } catch (error) {
@@ -101,10 +106,13 @@ odoo.define("pos_order_quotation.CreateQuotationButton", function(require) {
                     })
                     return;
                 }
-                this.showPopup('QuotationPopUpAlert', {
-                    title: this.env._t('Sucesso'),
-                    body: this.env._t(quotation_number + ' Criado com Sucesso!'),
-                })
+
+                if(returnOk){
+                    this.showPopup('QuotationPopUpAlert', {
+                        title: this.env._t('Sucesso'),
+                        body: this.env._t(quotation_number + ' Criado com Sucesso!'),
+                    })
+                }
             }
         }
 
@@ -132,6 +140,7 @@ odoo.define("pos_order_quotation.CreateQuotationButton", function(require) {
                     price_subtotal_incl: line[2].price_subtotal_incl,
                     discount: line[2].discount,
                     tax_ids: line[2].tax_ids,
+                    customer_note: line[2].customer_note
                 }])
             })
 
